@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <title>Client Contact – BrandZone</title>
-
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -154,12 +153,6 @@
       color: #a5a5a5;
       margin-bottom: 4px;
     }
-
-    h2.overview-title {
-      margin-top: 32px;
-      margin-bottom: 4px;
-      font-size: 24px;
-    }
   </style>
 </head>
 <body>
@@ -270,16 +263,13 @@
       </div>
     </div>
 
-    <!-- OVERVIEW TITLE -->
-    <h2 class="overview-title">Overview</h2>
-
     <!-- OVERVIEW: INDUSTRY -->
     <div class="accordion">
       <button class="accordion-header">
-        💡 Industry <span class="icon">›</span>
+        💡 Industry (Services, Products, Prices) <span class="icon">›</span>
       </button>
       <div class="accordion-body">
-        <label>Industry (Services, Products, Prices)</label>
+        <label>Industry</label>
         <textarea placeholder="- Services
 - Products
 - Price range"></textarea>
@@ -313,7 +303,6 @@
   </div>
 
   <script>
-    // Accordion logika: egyszerre egy nyitva
     document.querySelectorAll('.accordion-header').forEach(header => {
       header.addEventListener('click', () => {
         const accordion = header.parentElement;
