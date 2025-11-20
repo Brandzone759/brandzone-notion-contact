@@ -5,23 +5,12 @@
   <title>Client Contact – BrandZone</title>
 
   <style>
-    /* GÖRGETŐSÁV ELREJTÉSE (Ez a kulcs a tiszta kinézethez) */
-    body::-webkit-scrollbar {
-      display: none;
-    }
-    body {
-      -ms-overflow-style: none;  /* IE és Edge */
-      scrollbar-width: none;  /* Firefox */
-    }
-
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #191919; 
+      background: #191919; /* Notion dark mode háttér */
       color: #f5f5f5;
       margin: 0;
-      /* Kisebb padding, hogy jobban kiférjen Notionben */
-      padding: 20px; 
-      overflow-y: auto; /* Engedi a görgetést, ha muszáj, de a bar rejtve van */
+      padding: 40px;
     }
 
     .wrapper {
@@ -29,26 +18,26 @@
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 16px; /* Kicsit szorosabb térköz */
+      gap: 22px;
     }
 
     h2 {
       margin: 0;
-      font-size: 28px; /* Kicsit kisebb cím */
+      font-size: 32px;
       font-weight: 700;
       color: #f1f1f1;
     }
 
     .tagline {
-      font-size: 14px;
+      font-size: 15px;
       color: #b5b5b5;
-      margin-top: -5px;
-      margin-bottom: 12px;
+      margin-top: -10px;
+      margin-bottom: 18px;
     }
 
     /* Accordion – Notion stílus */
     .accordion {
-      border-radius: 12px;
+      border-radius: 16px;
       background: #2B2B2B;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.06);
@@ -57,7 +46,7 @@
 
     .accordion:hover {
       transform: translateY(-1px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
     }
 
     .accordion-header {
@@ -65,12 +54,12 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 18px;
+      padding: 16px 22px;
       background: #2F2F2F;
       border: none;
       cursor: pointer;
       color: #fafafa;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 600;
     }
 
@@ -86,20 +75,19 @@
     .accordion-body {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.3s ease-in-out; /* Simább animáció */
+      transition: max-height 0.25s ease;
       background: #242424;
-      padding: 0 18px;
+      padding: 0 22px;
     }
 
     .accordion.open .accordion-body {
-      padding: 10px 18px 18px 18px;
-      /* Fix max-height helyett nagyobbat adunk, hogy biztos kiférjen */
-      max-height: 800px; 
+      padding: 14px 22px 20px 22px;
+      max-height: 600px;
     }
 
     .accordion-body label {
       display: block;
-      font-size: 11px;
+      font-size: 12px;
       letter-spacing: 0.05em;
       margin-top: 12px;
       margin-bottom: 6px;
@@ -110,29 +98,28 @@
     .accordion-body input,
     .accordion-body textarea {
       width: 100%;
-      box-sizing: border-box; /* Fontos, hogy ne lógjon ki */
-      padding: 10px 12px;
-      border-radius: 6px;
+      padding: 10px 14px;
+      border-radius: 8px;
       border: 1px solid #3c3c3c;
       background: #1f1f1f;
       color: #f5f5f5;
-      font-size: 14px;
+      font-size: 15px;
       outline: none;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
     .accordion-body textarea {
-      resize: none; /* Ne húzogassa a user, mert elrontja a layoutot */
-      min-height: 80px;
+      resize: vertical;
+      min-height: 60px;
     }
 
-    /* Checkbox */
+    /* Checkbox – Notion style */
     .checkbox-group {
       display: flex;
       flex-wrap: wrap;
       gap: 8px 16px;
       margin-bottom: 6px;
-      margin-top: 8px;
+      margin-top: 4px;
     }
 
     .checkbox-group label {
@@ -152,7 +139,6 @@
       background: #1f1f1f;
       appearance: none;
       position: relative;
-      margin: 0;
     }
 
     .checkbox-group input[type="checkbox"]:checked::before {
@@ -167,21 +153,21 @@
       font-size: 12px;
       color: #a5a5a5;
       margin-bottom: 4px;
-      margin-top: 0;
     }
 
     h2.overview-title {
-      margin-top: 24px;
-      margin-bottom: 8px;
-      font-size: 20px;
+      margin-top: 32px;
+      margin-bottom: 4px;
+      font-size: 24px;
     }
   </style>
 </head>
 <body>
   <div class="wrapper">
     <h2>Client contact – BrandZone</h2>
-    <p class="tagline">Kattints a szürke boxokra a kitöltéshez.</p>
+    <p class="tagline">Kattints a szürke boxokra, és lenyílik, amit ki kell tölteni.</p>
 
+    <!-- CONTACT PERSON -->
     <div class="accordion">
       <button class="accordion-header">
         🧑 Contact person <span class="icon">›</span>
@@ -195,6 +181,7 @@
       </div>
     </div>
 
+    <!-- CONTACT DETAILS -->
     <div class="accordion">
       <button class="accordion-header">
         📞 Contact details <span class="icon">›</span>
@@ -208,6 +195,7 @@
       </div>
     </div>
 
+    <!-- WEBSITE & SOCIALS -->
     <div class="accordion">
       <button class="accordion-header">
         🌐 Website & Socials <span class="icon">›</span>
@@ -215,17 +203,22 @@
       <div class="accordion-body">
         <label>Website</label>
         <input type="url" placeholder="https://...">
+
         <label>TikTok</label>
         <input type="url" placeholder="https://www.tiktok.com/@...">
+
         <label>Facebook</label>
         <input type="url" placeholder="Facebook page link">
+
         <label>Instagram</label>
         <input type="url" placeholder="@brand">
+
         <label>YouTube</label>
         <input type="url" placeholder="Channel link">
       </div>
     </div>
 
+    <!-- NEEDS HELP WITH -->
     <div class="accordion">
       <button class="accordion-header">
         🎯 Needs help with <span class="icon">›</span>
@@ -236,6 +229,7 @@
       </div>
     </div>
 
+    <!-- PRIMARY COMMUNICATION -->
     <div class="accordion">
       <button class="accordion-header">
         📬 Primary communication <span class="icon">›</span>
@@ -249,6 +243,7 @@
       </div>
     </div>
 
+    <!-- POTENTIAL COLLAB – külön box -->
     <div class="accordion">
       <button class="accordion-header">
         📊 Potential collab <span class="icon">›</span>
@@ -264,70 +259,69 @@
       </div>
     </div>
 
+    <!-- NOTES -->
     <div class="accordion">
       <button class="accordion-header">
         📝 Notes <span class="icon">›</span>
       </button>
       <div class="accordion-body">
         <label>Notes</label>
-        <textarea placeholder="Bármilyen extra információ, meeting jegyzet..."></textarea>
+        <textarea placeholder="Bármilyen extra információ, meeting jegyzet, vibe, fontos részlet..."></textarea>
       </div>
     </div>
 
+    <!-- OVERVIEW TITLE -->
     <h2 class="overview-title">Overview</h2>
 
+    <!-- OVERVIEW: INDUSTRY -->
     <div class="accordion">
       <button class="accordion-header">
         💡 Industry <span class="icon">›</span>
       </button>
       <div class="accordion-body">
         <label>Industry (Services, Products, Prices)</label>
-        <textarea placeholder="- Services, Products, Price range"></textarea>
+        <textarea placeholder="- Services
+- Products
+- Price range"></textarea>
       </div>
     </div>
 
+    <!-- OVERVIEW: EMPLOYEES -->
     <div class="accordion">
       <button class="accordion-header">
         💡 Employees <span class="icon">›</span>
       </button>
       <div class="accordion-body">
         <label>Employees</label>
-        <textarea placeholder="- Number of employees, Key roles"></textarea>
+        <textarea placeholder="- Number of employees
+- Key roles / departments"></textarea>
       </div>
     </div>
 
+    <!-- OVERVIEW: WHAT ARE THEY INTERESTED IN -->
     <div class="accordion">
       <button class="accordion-header">
         💡 What are they interested in <span class="icon">›</span>
       </button>
       <div class="accordion-body">
         <label>What are they interested in</label>
-        <p class="small-note">Mit szeretnének elérni?</p>
-        <textarea placeholder="Pl.: több online lead, brandépítés..."></textarea>
+        <p class="small-note">Write down the simple need of the lead – mit szeretnének elérni a social / videókkal.</p>
+        <textarea placeholder="Pl.: több online lead, brandépítés, employer branding, TikTok jelenlét, stb."></textarea>
       </div>
     </div>
 
   </div>
 
   <script>
-    // Accordion logika: Egyszerre egy nyitva
+    // Accordion logika: egyszerre egy nyitva
     document.querySelectorAll('.accordion-header').forEach(header => {
       header.addEventListener('click', () => {
         const accordion = header.parentElement;
         const isOpen = accordion.classList.contains('open');
 
-        // Bezárjuk az összes többit
         document.querySelectorAll('.accordion').forEach(acc => acc.classList.remove('open'));
 
-        // Ha nem volt nyitva, kinyitjuk ezt
-        if (!isOpen) {
-            accordion.classList.add('open');
-            
-            // OPCIONÁLIS: Automatikus görgetés a kinyitott elemhez (Notionben nem mindig működik jól, de megpróbálhatjuk)
-            setTimeout(() => {
-                accordion.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 300);
-        }
+        if (!isOpen) accordion.classList.add('open');
       });
     });
   </script>
