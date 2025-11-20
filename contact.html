@@ -6,7 +6,7 @@
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #191919; /* ← Notion dark mode háttér */
+      background: #191919; /* Notion dark mode háttér */
       color: #f5f5f5;
       margin: 0;
       padding: 40px;
@@ -34,10 +34,10 @@
       margin-bottom: 18px;
     }
 
-    /* Accordion teljes Notion-stílusú beállítás */
+    /* Accordion – Notion stílus */
     .accordion {
       border-radius: 16px;
-      background: #2B2B2B; /* Notion box background */
+      background: #2B2B2B;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.06);
       transition: 0.15s ease;
@@ -54,7 +54,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 16px 22px;
-      background: #2F2F2F; /* Notion light-box background */
+      background: #2F2F2F;
       border: none;
       cursor: pointer;
       color: #fafafa;
@@ -84,7 +84,6 @@
       max-height: 600px;
     }
 
-    /* Input mezők Notion-stílusban */
     .accordion-body label {
       display: block;
       font-size: 12px;
@@ -101,7 +100,7 @@
       padding: 10px 14px;
       border-radius: 8px;
       border: 1px solid #3c3c3c;
-      background: #1f1f1f;  /* Notion input background */
+      background: #1f1f1f;
       color: #f5f5f5;
       font-size: 15px;
       outline: none;
@@ -112,6 +111,48 @@
       resize: vertical;
       min-height: 60px;
     }
+
+    /* Checkbox csoportok – Notion-szerű */
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin-bottom: 6px;
+      margin-top: 4px;
+    }
+
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: #e5e5e5;
+      cursor: pointer;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      border-radius: 3px;
+      border: 1px solid #666;
+      background: #1f1f1f;
+      appearance: none;
+      position: relative;
+    }
+
+    .checkbox-group input[type="checkbox"]:checked::before {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      background: #3b82f6;
+      border-radius: 2px;
+    }
+
+    .small-note {
+      font-size: 12px;
+      color: #a5a5a5;
+      margin-bottom: 4px;
+    }
   </style>
 </head>
 <body>
@@ -119,7 +160,7 @@
     <h2>Client contact – BrandZone</h2>
     <p class="tagline">Kattints a szürke boxokra, és lenyílik, amit ki kell tölteni.</p>
 
-    <!-- Accordionok: változatlan szerkezet, csak UI frissítve -->
+    <!-- CONTACT PERSON -->
     <div class="accordion">
       <button class="accordion-header">
         🧑 Contact person <span class="icon">›</span>
@@ -133,6 +174,7 @@
       </div>
     </div>
 
+    <!-- CONTACT DETAILS -->
     <div class="accordion">
       <button class="accordion-header">
         📞 Contact details <span class="icon">›</span>
@@ -146,6 +188,7 @@
       </div>
     </div>
 
+    <!-- WEBSITE & SOCIALS -->
     <div class="accordion">
       <button class="accordion-header">
         🌐 Website & Socials <span class="icon">›</span>
@@ -168,6 +211,7 @@
       </div>
     </div>
 
+    <!-- NEEDS HELP WITH -->
     <div class="accordion">
       <button class="accordion-header">
         🎯 Needs help with <span class="icon">›</span>
@@ -178,16 +222,39 @@
       </div>
     </div>
 
+    <!-- PRIMARY COMMUNICATION + POTENTIAL COLLAB -->
     <div class="accordion">
       <button class="accordion-header">
-        📝 Extra notes <span class="icon">›</span>
+        📬 Primary communication <span class="icon">›</span>
       </button>
       <div class="accordion-body">
-        <label>Megjegyzések</label>
-        <textarea placeholder="Extra információ az ügyfélről..."></textarea>
+        <label>Primary communication</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox">Email</label>
+          <label><input type="checkbox">WhatsApp</label>
+          <label><input type="checkbox">Phone</label>
+        </div>
+
+        <label>Potential collab</label>
+        <p class="small-note">Mennyire látsz potenciált az együttműködésben?</p>
+        <div class="checkbox-group">
+          <label><input type="checkbox">High</label>
+          <label><input type="checkbox">Medium</label>
+          <label><input type="checkbox">Low</label>
+        </div>
       </div>
     </div>
 
+    <!-- NOTES -->
+    <div class="accordion">
+      <button class="accordion-header">
+        📝 Notes <span class="icon">›</span>
+      </button>
+      <div class="accordion-body">
+        <label>Notes</label>
+        <textarea placeholder="Bármilyen extra információ, meeting jegyzet, vibe, fontos megjegyzés..."></textarea>
+      </div>
+    </div>
   </div>
 
   <script>
