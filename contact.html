@@ -194,7 +194,7 @@
       <label for="client-code">Client / Project code</label>
       <input id="client-code" type="text" placeholder="Pl. MiniHome, Diverzum, Perfekt_2025_Q1">
       <p class="small-note">
-        Új klienshez írj be egy új kódot – a form üresen indul. Ha később ugyanazt a kódot újra beírod, visszatölti a hozzátartozó adatokat.
+        Új klienshez írj be egy új kódot – a form üresen indul. Ha később ugyanazt a kódot újra beírod (vagy már itt megjelenik), visszatölti a hozzátartozó adatokat.
       </p>
     </div>
 
@@ -351,7 +351,7 @@
       });
     });
 
-    /* Client code alapú mentés */
+    /* Client code alapú mentés + utolsó kód megjegyzése */
     (function() {
       const codeInput = document.getElementById('client-code');
 
@@ -380,7 +380,8 @@
 
       function loadFor(code) {
         fields.forEach((field, index) => {
-          const saved = localStorage.getItem(keyFor(index));
+          const key = keyFor(index);
+          const saved = localStorage.getItem(key);
           if (saved !== null) {
             if (field.type === 'checkbox') {
               field.checked = saved === 'true';
@@ -395,6 +396,14 @@
             }
           }
         });
+      }
+
+      // Inicializálás: utoljára használt kód betöltése (ha van)
+      const lastCode = localStorage.getItem('bz_last_client_code');
+      if (lastCode) {
+        currentCode = lastCode;
+        codeInput.value = lastCode;
+        loadFor(currentCode);
       }
 
       // Mentés minden mezőváltozásnál – csak ha már van client code
@@ -416,6 +425,14 @@
       codeInput.addEventListener('change', () => {
         const code = codeInput.value.trim();
         currentCode = code || null;
+
+        // utolsó használt kód elmentése
+        if (currentCode) {
+          localStorage.setItem('bz_last_client_code', currentCode);
+        } else {
+          localStorage.removeItem('bz_last_client_code');
+        }
+
         clearFields();
         if (currentCode) {
           loadFor(currentCode);
