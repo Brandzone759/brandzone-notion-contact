@@ -38,14 +38,27 @@
     /* Project bar */
     .project-bar {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
+      flex-direction: column;
+      gap: 6px;
       margin-bottom: 20px;
       padding: 10px 16px;
       border-radius: 12px;
       background: #232323;
       border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .project-bar-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .project-bar-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
     }
 
     .project-bar label {
@@ -58,6 +71,17 @@
     .project-bar input[type="text"] {
       flex: 1;
       min-width: 160px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #3c3c3c;
+      background: #1f1f1f;
+      color: #f5f5f5;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .project-bar select {
+      min-width: 200px;
       padding: 8px 10px;
       border-radius: 8px;
       border: 1px solid #3c3c3c;
@@ -88,7 +112,7 @@
     .status-text {
       font-size: 12px;
       color: #a5a5a5;
-      margin-top: 4px;
+      margin-top: 2px;
     }
 
     /* Accordion – Notion stílus */
@@ -221,6 +245,11 @@
       .accordion.open .accordion-body {
         padding: 12px 16px 16px 16px;
       }
+      .project-bar-top,
+      .project-bar-bottom {
+        flex-direction: column;
+        align-items: stretch;
+      }
     }
   </style>
 </head>
@@ -231,10 +260,18 @@
 
     <!-- PROJECT BAR -->
     <div class="project-bar">
-      <label for="projectCode">Project code</label>
-      <input id="projectCode" type="text" placeholder="Pl. MINIHOME_2025_Q1" />
-      <button id="loadProjectBtn" class="secondary">Load</button>
-      <button id="saveProjectBtn">Save</button>
+      <div class="project-bar-top">
+        <label for="projectCode">Project code</label>
+        <input id="projectCode" type="text" placeholder="Pl. MINIHOME_2025_Q1" />
+        <button id="loadProjectBtn" class="secondary">Load</button>
+        <button id="saveProjectBtn">Save</button>
+      </div>
+      <div class="project-bar-bottom">
+        <label for="projectSelector">Saved projects</label>
+        <select id="projectSelector">
+          <option value="">– Select saved project –</option>
+        </select>
+      </div>
       <div class="status-text" id="statusText"></div>
     </div>
 
@@ -392,6 +429,7 @@
     const projectInput = document.getElementById("projectCode");
     const loadBtn = document.getElementById("loadProjectBtn");
     const saveBtn = document.getElementById("saveProjectBtn");
+    const projectSelector = document.getElementById("projectSelector");
 
     const fieldElements = Array.from(
       document.querySelectorAll("[data-field]")
@@ -432,7 +470,12 @@
         const key = el.dataset.field;
         if (!key) return;
         const value = data[key];
-        if (value === undefined) return;
+        if (value === undefined) {
+          // ha üres, akkor nullázzuk
+          if (el.type === "checkbox") el.checked = false;
+          else el.value = "";
+          return;
+        }
 
         if (el.type === "checkbox") {
           el.checked = value === "1";
@@ -464,7 +507,6 @@
 
       if (!data || data.length === 0) {
         setStatus("Nincs adat ehhez a project code-hoz (még). Újként tudod menteni.");
-        // ürítsük a formot
         fillForm({});
         return;
       }
@@ -489,7 +531,7 @@
 
       setStatus("Saving…");
 
-      // Töröljük a régi sorokat ehhez a project_code-hoz
+      // Régi sorok törlése ehhez a code-hoz
       const { error: delError } = await supabaseClient
         .from("projects")
         .delete()
@@ -523,10 +565,50 @@
       }
 
       setStatus("Mentve: " + code);
+      await refreshProjectList(code);
     }
+
+    async function refreshProjectList(selectCode) {
+      const { data, error } = await supabaseClient
+        .from("projects")
+        .select("client_code")
+        .not("client_code", "is", null)
+        .order("client_code", { ascending: true });
+
+      if (error) {
+        console.error(error);
+        setStatus("Nem sikerült betölteni a saved project listát.", true);
+        return;
+      }
+
+      const uniqueCodes = [...new Set((data || []).map(r => r.client_code))];
+
+      projectSelector.innerHTML = '<option value="">– Select saved project –</option>';
+      uniqueCodes.forEach(code => {
+        const opt = document.createElement("option");
+        opt.value = code;
+        opt.textContent = code;
+        projectSelector.appendChild(opt);
+      });
+
+      if (selectCode && uniqueCodes.includes(selectCode)) {
+        projectSelector.value = selectCode;
+      }
+    }
+
+    // ha a selectben választasz, automatikusan betölt
+    projectSelector.addEventListener("change", () => {
+      const code = projectSelector.value;
+      if (!code) return;
+      projectInput.value = code;
+      loadProject();
+    });
 
     loadBtn.addEventListener("click", loadProject);
     saveBtn.addEventListener("click", saveProject);
+
+    // oldal betöltéskor frissítjük a saved project listát
+    refreshProjectList();
   </script>
 </body>
 </html>
