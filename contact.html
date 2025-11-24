@@ -35,16 +35,27 @@
       margin-bottom: 18px;
     }
 
-    /* Client code box */
-    .instance-box {
+    /* PROJECT BAR – select + code + save */
+    .project-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      align-items: flex-end;
+      margin-bottom: 8px;
+      padding: 14px 18px 16px 18px;
       border-radius: 14px;
       background: #232323;
       border: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 14px 18px 16px 18px;
     }
 
-    .instance-box label {
-      display: block;
+    .project-row {
+      display: flex;
+      flex-direction: column;
+      min-width: 180px;
+      flex: 1;
+    }
+
+    .project-bar label {
       font-size: 12px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
@@ -52,22 +63,38 @@
       margin-bottom: 6px;
     }
 
-    .instance-box input {
-      width: 100%;
-      padding: 9px 12px;
+    .project-bar select,
+    .project-bar input {
+      padding: 8px 12px;
       border-radius: 8px;
       border: 1px solid #3c3c3c;
       background: #181818;
       color: #f5f5f5;
       font-size: 14px;
       outline: none;
-      margin-bottom: 4px;
     }
 
-    .small-note {
-      font-size: 12px;
+    .project-bar button {
+      padding: 9px 16px;
+      border-radius: 999px;
+      border: none;
+      background: #3b82f6;
+      color: #fdfdfd;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .project-bar button:hover {
+      background: #2563eb;
+    }
+
+    .project-note {
+      width: 100%;
+      font-size: 11px;
       color: #a5a5a5;
-      margin-bottom: 4px;
+      margin-top: 4px;
     }
 
     .accordion {
@@ -181,6 +208,12 @@
       background: #3b82f6;
       border-radius: 2px;
     }
+
+    .small-note {
+      font-size: 12px;
+      color: #a5a5a5;
+      margin-bottom: 4px;
+    }
   </style>
 </head>
 
@@ -189,12 +222,22 @@
     <h2>Client contact – BrandZone</h2>
     <p class="tagline">Click the grey boxes to reveal the fields to fill out.</p>
 
-    <!-- CLIENT / PROJECT CODE -->
-    <div class="instance-box">
-      <label for="client-code">Client / Project code</label>
-      <input id="client-code" type="text" placeholder="Pl. MiniHome, Diverzum, Perfekt_2025_Q1">
-      <p class="small-note">
-        Új klienshez írj be egy új kódot – a form üresen indul. Ha később ugyanazt a kódot újra beírod (vagy már itt megjelenik), visszatölti a hozzátartozó adatokat.
+    <!-- PROJECT SELECT + CODE + SAVE -->
+    <div class="project-bar">
+      <div class="project-row">
+        <label for="project-select">Saved projects</label>
+        <select id="project-select">
+          <option value="">– Select saved project –</option>
+        </select>
+      </div>
+      <div class="project-row">
+        <label for="project-code-input">Project code</label>
+        <input id="project-code-input" type="text" placeholder="Pl. MiniHome_2025_Q1">
+      </div>
+      <button id="save-project-btn">Save project</button>
+      <p class="project-note">
+        A projektek és az adatok <strong>csak ezen az eszközön / böngészőben</strong> tárolódnak (localStorage).  
+        Új code + Save = új projekt, a lenyílóból választva betölti az ahhoz tartozó adatokat.
       </p>
     </div>
 
@@ -341,7 +384,7 @@
   </div>
 
   <script>
-    /* Accordion: egyszerre egy nyitva */
+    // Accordion: egyszerre egy legyen nyitva
     document.querySelectorAll('.accordion-header').forEach(header => {
       header.addEventListener('click', () => {
         const accordion = header.parentElement;
@@ -351,36 +394,53 @@
       });
     });
 
-    /* Client code alapú mentés + utolsó kód megjegyzése */
-    (function() {
-      const codeInput = document.getElementById('client-code');
+    // PROJEKT VÁLASZTÓ + MENTÉS (localStorage)
+    (function () {
+      const select = document.getElementById('project-select');
+      const codeInput = document.getElementById('project-code-input');
+      const saveBtn = document.getElementById('save-project-btn');
 
-      const allFields = Array.from(
+      const fields = Array.from(
         document.querySelectorAll('.accordion-body input, .accordion-body textarea, .accordion-body input[type="checkbox"]')
       );
 
-      // A client code mezőt ne kezeljük normál mezőként
-      const fields = allFields.filter(f => f !== codeInput);
+      const LIST_KEY = 'bz_project_list_v1';
+      const PREFIX = 'bz_project_v1_';
 
-      let currentCode = null;
+      let currentCode = '';
 
-      function keyFor(index) {
-        return 'bz_client_' + currentCode + '_' + index;
+      function loadProjectList() {
+        const raw = localStorage.getItem(LIST_KEY);
+        if (!raw) return [];
+        try {
+          const list = JSON.parse(raw);
+          return Array.isArray(list) ? list : [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function saveProjectList(list) {
+        localStorage.setItem(LIST_KEY, JSON.stringify(list));
+      }
+
+      function keyFor(code, index) {
+        return PREFIX + code + '_' + index;
       }
 
       function clearFields() {
-        fields.forEach(field => {
-          if (field.type === 'checkbox') {
-            field.checked = false;
+        fields.forEach(f => {
+          if (f.type === 'checkbox') {
+            f.checked = false;
           } else {
-            field.value = '';
+            f.value = '';
           }
         });
       }
 
-      function loadFor(code) {
+      function loadFieldsFor(code) {
         fields.forEach((field, index) => {
-          const key = keyFor(index);
+          const key = keyFor(code, index);
           const saved = localStorage.getItem(key);
           if (saved !== null) {
             if (field.type === 'checkbox') {
@@ -398,21 +458,72 @@
         });
       }
 
-      // Inicializálás: utoljára használt kód betöltése (ha van)
-      const lastCode = localStorage.getItem('bz_last_client_code');
-      if (lastCode) {
-        currentCode = lastCode;
-        codeInput.value = lastCode;
-        loadFor(currentCode);
+      function saveFieldsFor(code) {
+        fields.forEach((field, index) => {
+          const key = keyFor(code, index);
+          if (field.type === 'checkbox') {
+            localStorage.setItem(key, field.checked ? 'true' : 'false');
+          } else {
+            localStorage.setItem(key, field.value);
+          }
+        });
       }
 
-      // Mentés minden mezőváltozásnál – csak ha már van client code
+      function refreshSelect() {
+        const list = loadProjectList();
+        while (select.options.length > 1) {
+          select.remove(1);
+        }
+        list.forEach(code => {
+          const opt = document.createElement('option');
+          opt.value = code;
+          opt.textContent = code;
+          select.appendChild(opt);
+        });
+        if (currentCode && list.includes(currentCode)) {
+          select.value = currentCode;
+        } else {
+          select.value = '';
+        }
+      }
+
+      // Save gomb
+      saveBtn.addEventListener('click', () => {
+        const code = codeInput.value.trim();
+        if (!code) {
+          alert('Adj meg egy project code-ot mentés előtt.');
+          return;
+        }
+        currentCode = code;
+
+        const list = loadProjectList();
+        if (!list.includes(code)) {
+          list.push(code);
+          saveProjectList(list);
+        }
+
+        saveFieldsFor(code);
+        refreshSelect();
+      });
+
+      // Projekt választó
+      select.addEventListener('change', () => {
+        const code = select.value;
+        currentCode = code;
+        codeInput.value = code;
+        clearFields();
+        if (code) {
+          loadFieldsFor(code);
+        }
+      });
+
+      // Auto-mentés: ha már van currentCode
       fields.forEach((field, index) => {
         const handler = () => {
           if (!currentCode) return;
-          const key = keyFor(index);
+          const key = keyFor(currentCode, index);
           if (field.type === 'checkbox') {
-            localStorage.setItem(key, field.checked.toString());
+            localStorage.setItem(key, field.checked ? 'true' : 'false');
           } else {
             localStorage.setItem(key, field.value);
           }
@@ -421,23 +532,8 @@
         field.addEventListener('change', handler);
       });
 
-      // Ha megváltozik a client code
-      codeInput.addEventListener('change', () => {
-        const code = codeInput.value.trim();
-        currentCode = code || null;
-
-        // utolsó használt kód elmentése
-        if (currentCode) {
-          localStorage.setItem('bz_last_client_code', currentCode);
-        } else {
-          localStorage.removeItem('bz_last_client_code');
-        }
-
-        clearFields();
-        if (currentCode) {
-          loadFor(currentCode);
-        }
-      });
+      // Init: csak a projektlista töltődik, nem választ automatikusan
+      refreshSelect();
     })();
   </script>
 </body>
