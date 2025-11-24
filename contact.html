@@ -2,19 +2,30 @@
 <html lang="hu">
 <head>
   <meta charset="UTF-8" />
-  <title>Client Contact – BrandZone</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Client Contact & Project Infos – BrandZone</title>
+
   <style>
+    /* --- Scrollbar elrejtése --- */
+    html, body {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #191919; /* Notion dark mode háttér */
+      background: #191919;
       color: #f5f5f5;
       margin: 0;
-      padding: 40px;
+      padding: 20px;
+      overflow-y: auto;
     }
 
     .wrapper {
-      max-width: 780px;
+      max-width: 1080px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -22,8 +33,8 @@
     }
 
     h2 {
-      margin: 0;
-      font-size: 32px;
+      margin: 0 0 8px 0;
+      font-size: 28px;
       font-weight: 700;
       color: #f1f1f1;
     }
@@ -31,7 +42,7 @@
     .tagline {
       font-size: 15px;
       color: #b5b5b5;
-      margin-top: -10px;
+      margin-top: -6px;
       margin-bottom: 18px;
     }
 
@@ -40,7 +51,7 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       padding: 10px 16px;
       border-radius: 12px;
       background: #232323;
@@ -239,9 +250,130 @@
       margin-bottom: 4px;
     }
 
+    /* --- GRID / PROJECT INFOS --- */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+      align-items: start;
+      margin-top: 8px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: #2B2B2B;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .card-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: #2F2F2F;
+      border: none;
+      cursor: pointer;
+      color: #fafafa;
+      font-size: 16px;
+      font-weight: 600;
+      user-select: none;
+      text-align: left;
+    }
+
+    .card-header .title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-header .icon {
+      font-size: 18px;
+    }
+
+    .card-header .arrow {
+      font-size: 14px;
+      color: #888;
+      transition: transform 0.2s ease;
+    }
+
+    .card.open .card-header .arrow {
+      transform: rotate(180deg);
+    }
+
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-in-out;
+      background: #252525;
+      padding: 0 18px;
+    }
+
+    .card.open .card-body {
+      padding: 10px 18px 20px 18px;
+      max-height: 1000px;
+    }
+
+    .card-body label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      color: #cfcfcf;
+      background: none;
+    }
+
+    .card-body label::before {
+      content: "💡";
+      font-size: 10px;
+      opacity: 0.7;
+    }
+
+    .card-body textarea,
+    .card-body input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #3c3c3c;
+      background: #1f1f1f;
+      color: #f5f5f5;
+      font-size: 14px;
+      line-height: 1.4;
+      outline: none;
+    }
+
+    .card-body textarea {
+      resize: vertical;
+      min-height: 80px;
+      font-family: inherit;
+    }
+
+    .card-body input {
+      margin-bottom: 4px;
+    }
+
+    .checkbox-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
     @media (max-width: 600px) {
       body {
-        padding: 20px;
+        padding: 16px;
       }
       .accordion-header {
         padding: 14px 16px;
@@ -259,10 +391,10 @@
 </head>
 <body>
   <div class="wrapper">
+    <!-- CONTACT + PROJECT BAR -->
     <h2>Client contact – BrandZone</h2>
     <p class="tagline">Click the grey boxes to reveal the fields to fill out.</p>
 
-    <!-- PROJECT BAR -->
     <div class="project-bar">
       <div class="project-bar-top">
         <label for="projectCode">Project code</label>
@@ -420,6 +552,118 @@
       </div>
     </div>
 
+    <!-- PROJECT INFOS GRID -->
+    <h2>Project infos</h2>
+
+    <div class="grid-container">
+      <div class="card">
+        <button class="card-header">
+          <div class="title-group">
+            <span class="icon">ℹ️</span> Basic client information
+          </div>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="card-body">
+          <label>Short summary of what the company does / Key products</label>
+          <textarea placeholder="Summary..." data-field="summary_company"></textarea>
+
+          <label>Target Audience / Buyer Persona</label>
+          <textarea placeholder="Who is the target audience?" data-field="target_audience"></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <button class="card-header">
+          <div class="title-group">
+            <span class="icon">📈</span> Business overview
+          </div>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="card-body">
+          <label>Existing online presence (socials, website, activity)</label>
+          <textarea placeholder="List current channels..." data-field="existing_online_presence"></textarea>
+
+          <label>Competitors mentioned or visible online</label>
+          <textarea placeholder="List competitors..." data-field="competitors"></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <button class="card-header">
+          <div class="title-group">
+            <span class="icon">📊</span> Pain points & challenges
+          </div>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="card-body">
+          <label>Bullet points note about all of their problems</label>
+          <textarea placeholder="- Problem 1&#10;- Problem 2" data-field="pain_points"></textarea>
+
+          <label>Challenges of social media presence / Motivation</label>
+          <textarea placeholder="Why do they need help now?" data-field="challenges_motivation"></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <button class="card-header">
+          <div class="title-group">
+            <span class="icon">📝</span> Customer needs & content
+          </div>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="card-body">
+          <label>What kind of content the client wants / Story to tell</label>
+          <textarea placeholder="Short form, photos, image film..." data-field="content_type"></textarea>
+
+          <label>Tone and style they prefer</label>
+          <input type="text" placeholder="Fun, professional, emotional..." data-field="tone_style">
+
+          <label>Frequency / campaign or ongoing idea</label>
+          <input type="text" placeholder="e.g. 2 videos / week" data-field="frequency">
+
+          <label>Actor providing</label>
+          <input type="text" placeholder="Client provides or Agency?" data-field="actor_providing">
+
+          <label>Social media channels</label>
+          <input type="text" placeholder="TikTok, IG, YT..." data-field="social_channels">
+        </div>
+      </div>
+
+      <div class="card">
+        <button class="card-header">
+          <div class="title-group">
+            <span class="icon">🏁</span> The goals
+          </div>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="card-body">
+          <label>What is the most important result?</label>
+          <textarea placeholder="Most important KPI..." data-field="main_result"></textarea>
+
+          <label>Industry or local market?</label>
+          <input type="text" placeholder="Local / Global" data-field="industry_or_market">
+
+          <label>Long term or campaign?</label>
+          <input type="text" placeholder="Long term / One-off" data-field="long_term_or_campaign">
+
+          <label>What would success look like for them?</label>
+          <textarea placeholder="Definition of success..." data-field="success_definition"></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <button class="card-header">
+          <div class="title-group">
+            <span class="icon">💻</span> Previous experience
+          </div>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="card-body">
+          <label>Short note of what they liked/disliked about partnerships</label>
+          <textarea placeholder="Previous agency experiences..." data-field="previous_experience"></textarea>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Supabase JS -->
@@ -441,7 +685,7 @@
       document.querySelectorAll("[data-field]")
     );
 
-    // Accordion toggle
+    // Accordion toggle (felső rész)
     document.querySelectorAll(".accordion-header").forEach(header => {
       header.addEventListener("click", () => {
         const accordion = header.parentElement;
@@ -449,6 +693,14 @@
 
         document.querySelectorAll(".accordion").forEach(acc => acc.classList.remove("open"));
         if (!isOpen) accordion.classList.add("open");
+      });
+    });
+
+    // Card (Project infos) toggle
+    document.querySelectorAll(".card-header").forEach(header => {
+      header.addEventListener("click", () => {
+        const card = header.parentElement;
+        card.classList.toggle("open");
       });
     });
 
@@ -599,7 +851,6 @@
         return;
       }
 
-      // ürítsük ki a formot és a mezőt
       clearForm();
       projectInput.value = "";
       setStatus("Projekt törölve: " + code);
@@ -647,7 +898,6 @@
     saveBtn.addEventListener("click", saveProject);
     deleteBtn.addEventListener("click", deleteProject);
 
-    // oldal betöltéskor frissítjük a saved project listát
     refreshProjectList();
   </script>
 </body>
