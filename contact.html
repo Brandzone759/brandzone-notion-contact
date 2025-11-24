@@ -130,7 +130,7 @@
       margin-top: 2px;
     }
 
-    /* Accordion – Notion stílus */
+    /* Accordion – Notion stílus (felső rész) */
     .accordion {
       border-radius: 16px;
       background: #2B2B2B;
@@ -835,9 +835,6 @@
         return;
       }
 
-      const sure = confirm(`Biztos törlöd ezt a projektet? (${code})`);
-      if (!sure) return;
-
       setStatus("Deleting…");
 
       const { error } = await supabaseClient
@@ -898,6 +895,7 @@
     saveBtn.addEventListener("click", saveProject);
     deleteBtn.addEventListener("click", deleteProject);
 
+    // oldal betöltéskor frissítjük a saved project listát
     refreshProjectList();
   </script>
 </body>
