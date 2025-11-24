@@ -35,6 +35,41 @@
       margin-bottom: 18px;
     }
 
+    /* Client code box */
+    .instance-box {
+      border-radius: 14px;
+      background: #232323;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 14px 18px 16px 18px;
+    }
+
+    .instance-box label {
+      display: block;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #bdbdbd;
+      margin-bottom: 6px;
+    }
+
+    .instance-box input {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid #3c3c3c;
+      background: #181818;
+      color: #f5f5f5;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 4px;
+    }
+
+    .small-note {
+      font-size: 12px;
+      color: #a5a5a5;
+      margin-bottom: 4px;
+    }
+
     .accordion {
       border-radius: 16px;
       background: #2B2B2B;
@@ -146,12 +181,6 @@
       background: #3b82f6;
       border-radius: 2px;
     }
-
-    .small-note {
-      font-size: 12px;
-      color: #a5a5a5;
-      margin-bottom: 4px;
-    }
   </style>
 </head>
 
@@ -159,6 +188,15 @@
   <div class="wrapper">
     <h2>Client contact – BrandZone</h2>
     <p class="tagline">Click the grey boxes to reveal the fields to fill out.</p>
+
+    <!-- CLIENT / PROJECT CODE -->
+    <div class="instance-box">
+      <label for="client-code">Client / Project code</label>
+      <input id="client-code" type="text" placeholder="Pl. MiniHome, Diverzum, Perfekt_2025_Q1">
+      <p class="small-note">
+        Új klienshez írj be egy új kódot – a form üresen indul. Ha később ugyanazt a kódot újra beírod, visszatölti a hozzátartozó adatokat.
+      </p>
+    </div>
 
     <!-- CONTACT PERSON -->
     <div class="accordion">
@@ -313,41 +351,75 @@
       });
     });
 
-    /* PER-PAGE STORAGE instance paraméterrel */
+    /* Client code alapú mentés */
     (function() {
-      // URL-ből kiolvassuk az ?instance=... paramétert
-      const params = new URLSearchParams(window.location.search);
-      const instance = params.get('instance') || 'default';
+      const codeInput = document.getElementById('client-code');
 
-      // Ez lesz az adott Notion-oldal / kliens azonosítója
-      const pageId = 'bz_instance_' + instance;
-
-      const fields = document.querySelectorAll(
-        '.accordion-body input, .accordion-body textarea, .accordion-body input[type="checkbox"]'
+      const allFields = Array.from(
+        document.querySelectorAll('.accordion-body input, .accordion-body textarea, .accordion-body input[type="checkbox"]')
       );
 
-      fields.forEach((field, index) => {
-        const key = pageId + '_' + index;
+      // A client code mezőt ne kezeljük normál mezőként
+      const fields = allFields.filter(f => f !== codeInput);
 
-        const saved = localStorage.getItem(key);
-        if (saved !== null) {
+      let currentCode = null;
+
+      function keyFor(index) {
+        return 'bz_client_' + currentCode + '_' + index;
+      }
+
+      function clearFields() {
+        fields.forEach(field => {
           if (field.type === 'checkbox') {
-            field.checked = saved === 'true';
+            field.checked = false;
           } else {
-            field.value = saved;
+            field.value = '';
           }
-        }
+        });
+      }
 
+      function loadFor(code) {
+        fields.forEach((field, index) => {
+          const saved = localStorage.getItem(keyFor(index));
+          if (saved !== null) {
+            if (field.type === 'checkbox') {
+              field.checked = saved === 'true';
+            } else {
+              field.value = saved;
+            }
+          } else {
+            if (field.type === 'checkbox') {
+              field.checked = false;
+            } else {
+              field.value = '';
+            }
+          }
+        });
+      }
+
+      // Mentés minden mezőváltozásnál – csak ha már van client code
+      fields.forEach((field, index) => {
         const handler = () => {
+          if (!currentCode) return;
+          const key = keyFor(index);
           if (field.type === 'checkbox') {
             localStorage.setItem(key, field.checked.toString());
           } else {
             localStorage.setItem(key, field.value);
           }
         };
-
         field.addEventListener('input', handler);
         field.addEventListener('change', handler);
+      });
+
+      // Ha megváltozik a client code
+      codeInput.addEventListener('change', () => {
+        const code = codeInput.value.trim();
+        currentCode = code || null;
+        clearFields();
+        if (currentCode) {
+          loadFor(currentCode);
+        }
       });
     })();
   </script>
