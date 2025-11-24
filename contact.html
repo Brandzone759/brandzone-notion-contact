@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <title>Client Contact – BrandZone</title>
+
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #191919; /* Notion dark mode háttér */
+      background: #191919;
       color: #f5f5f5;
       margin: 0;
       padding: 40px;
@@ -34,7 +35,6 @@
       margin-bottom: 18px;
     }
 
-    /* Accordion – Notion stílus */
     .accordion {
       border-radius: 16px;
       background: #2B2B2B;
@@ -112,7 +112,6 @@
       min-height: 60px;
     }
 
-    /* Checkbox – Notion style */
     .checkbox-group {
       display: flex;
       flex-wrap: wrap;
@@ -155,6 +154,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="wrapper">
     <h2>Client contact – BrandZone</h2>
@@ -236,7 +236,7 @@
       </div>
     </div>
 
-    <!-- POTENTIAL COLLAB – külön box -->
+    <!-- POTENTIAL COLLAB -->
     <div class="accordion">
       <button class="accordion-header">
         📊 Potential collab <span class="icon">›</span>
@@ -263,7 +263,7 @@
       </div>
     </div>
 
-    <!-- OVERVIEW: INDUSTRY -->
+    <!-- INDUSTRY -->
     <div class="accordion">
       <button class="accordion-header">
         💡 Industry (Services, Products, Prices) <span class="icon">›</span>
@@ -276,7 +276,7 @@
       </div>
     </div>
 
-    <!-- OVERVIEW: EMPLOYEES -->
+    <!-- EMPLOYEES -->
     <div class="accordion">
       <button class="accordion-header">
         💡 Employees <span class="icon">›</span>
@@ -288,64 +288,58 @@
       </div>
     </div>
 
-    <!-- OVERVIEW: WHAT ARE THEY INTERESTED IN -->
+    <!-- INTEREST -->
     <div class="accordion">
       <button class="accordion-header">
         💡 What are they interested in <span class="icon">›</span>
       </button>
       <div class="accordion-body">
         <label>What are they interested in</label>
-        <p class="small-note">Write down the simple need of the lead – mit szeretnének elérni a social / videókkal.</p>
-        <textarea placeholder="Pl.: more online leads, brand building, employer branding, TikTok presence, etc."></textarea>
+        <p class="small-note">What does the lead want to achieve?</p>
+        <textarea placeholder="Brand awareness, TikTok growth, more leads etc."></textarea>
       </div>
     </div>
 
   </div>
 
   <script>
-    // Accordion logika: egyszerre egy nyitva
+    /* Accordion működés */
     document.querySelectorAll('.accordion-header').forEach(header => {
       header.addEventListener('click', () => {
         const accordion = header.parentElement;
         const isOpen = accordion.classList.contains('open');
-
         document.querySelectorAll('.accordion').forEach(acc => acc.classList.remove('open'));
-
         if (!isOpen) accordion.classList.add('open');
       });
     });
 
-    // Mezők mentése localStorage-be, hogy frissítés után is megmaradjon
+    /* ★ PER-PAGE STORAGE ★ */
     (function() {
-      const fields = document.querySelectorAll('.accordion-body input, .accordion-body textarea, .accordion-body input[type="checkbox"]');
+      const pageId = btoa(window.location.href);  // Notion page URL-ből egyedi kulcs
+
+      const fields = document.querySelectorAll(
+        '.accordion-body input, .accordion-body textarea, .accordion-body input[type="checkbox"]'
+      );
 
       fields.forEach((field, index) => {
-        const key = 'bz_contact_field_' + index;
+        const key = "bz_contact_" + pageId + "_" + index;
 
-        // Betöltéskor: ha van elmentett érték, visszaírjuk
         const saved = localStorage.getItem(key);
-
         if (saved !== null) {
-          if (field.type === 'checkbox') {
-            field.checked = saved === 'true';
-          } else {
-            field.value = saved;
-          }
+          if (field.type === "checkbox") field.checked = saved === "true";
+          else field.value = saved;
         }
 
-        // Változáskor: input/textarea/checkbox mentése
         const handler = () => {
-          if (field.type === 'checkbox') {
-            localStorage.setItem(key, field.checked.toString());
-          } else {
-            localStorage.setItem(key, field.value);
-          }
+          if (field.type === "checkbox") localStorage.setItem(key, field.checked.toString());
+          else localStorage.setItem(key, field.value);
         };
 
-        field.addEventListener('input', handler);
-        field.addEventListener('change', handler);
+        field.addEventListener("input", handler);
+        field.addEventListener("change", handler);
       });
     })();
   </script>
+
 </body>
 </html>
