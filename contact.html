@@ -109,6 +109,10 @@
       background: #404040;
     }
 
+    .project-bar button.danger {
+      background: #b91c1c;
+    }
+
     .status-text {
       font-size: 12px;
       color: #a5a5a5;
@@ -265,6 +269,7 @@
         <input id="projectCode" type="text" placeholder="Pl. MINIHOME_2025_Q1" />
         <button id="loadProjectBtn" class="secondary">Load</button>
         <button id="saveProjectBtn">Save</button>
+        <button id="deleteProjectBtn" class="danger">Delete</button>
       </div>
       <div class="project-bar-bottom">
         <label for="projectSelector">Saved projects</label>
@@ -429,6 +434,7 @@
     const projectInput = document.getElementById("projectCode");
     const loadBtn = document.getElementById("loadProjectBtn");
     const saveBtn = document.getElementById("saveProjectBtn");
+    const deleteBtn = document.getElementById("deleteProjectBtn");
     const projectSelector = document.getElementById("projectSelector");
 
     const fieldElements = Array.from(
@@ -471,7 +477,6 @@
         if (!key) return;
         const value = data[key];
         if (value === undefined) {
-          // ha üres, akkor nullázzuk
           if (el.type === "checkbox") el.checked = false;
           else el.value = "";
           return;
@@ -483,6 +488,10 @@
           el.value = value;
         }
       });
+    }
+
+    function clearForm() {
+      fillForm({});
     }
 
     async function loadProject() {
@@ -507,7 +516,7 @@
 
       if (!data || data.length === 0) {
         setStatus("Nincs adat ehhez a project code-hoz (még). Újként tudod menteni.");
-        fillForm({});
+        clearForm();
         return;
       }
 
@@ -531,7 +540,6 @@
 
       setStatus("Saving…");
 
-      // Régi sorok törlése ehhez a code-hoz
       const { error: delError } = await supabaseClient
         .from("projects")
         .delete()
@@ -568,6 +576,36 @@
       await refreshProjectList(code);
     }
 
+    async function deleteProject() {
+      const code = projectInput.value.trim();
+      if (!code) {
+        setStatus("Nincs project code megadva törléshez.", true);
+        return;
+      }
+
+      const sure = confirm(`Biztos törlöd ezt a projektet? (${code})`);
+      if (!sure) return;
+
+      setStatus("Deleting…");
+
+      const { error } = await supabaseClient
+        .from("projects")
+        .delete()
+        .eq("client_code", code);
+
+      if (error) {
+        console.error(error);
+        setStatus("Hiba történt törlés közben.", true);
+        return;
+      }
+
+      // ürítsük ki a formot és a mezőt
+      clearForm();
+      projectInput.value = "";
+      setStatus("Projekt törölve: " + code);
+      await refreshProjectList();
+    }
+
     async function refreshProjectList(selectCode) {
       const { data, error } = await supabaseClient
         .from("projects")
@@ -593,10 +631,11 @@
 
       if (selectCode && uniqueCodes.includes(selectCode)) {
         projectSelector.value = selectCode;
+      } else {
+        projectSelector.value = "";
       }
     }
 
-    // ha a selectben választasz, automatikusan betölt
     projectSelector.addEventListener("change", () => {
       const code = projectSelector.value;
       if (!code) return;
@@ -606,6 +645,7 @@
 
     loadBtn.addEventListener("click", loadProject);
     saveBtn.addEventListener("click", saveProject);
+    deleteBtn.addEventListener("click", deleteProject);
 
     // oldal betöltéskor frissítjük a saved project listát
     refreshProjectList();
