@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <title>Client Contact – BrandZone</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #191919;
+      background: #191919; /* Notion dark mode háttér */
       color: #f5f5f5;
       margin: 0;
       padding: 40px;
@@ -35,68 +35,63 @@
       margin-bottom: 18px;
     }
 
-    /* PROJECT BAR – select + code + save */
+    /* Project bar */
     .project-bar {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px 16px;
-      align-items: flex-end;
-      margin-bottom: 8px;
-      padding: 14px 18px 16px 18px;
-      border-radius: 14px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 10px 16px;
+      border-radius: 12px;
       background: #232323;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .project-row {
-      display: flex;
-      flex-direction: column;
-      min-width: 180px;
-      flex: 1;
+      border: 1px solid rgba(255,255,255,0.06);
     }
 
     .project-bar label {
-      font-size: 12px;
-      letter-spacing: 0.06em;
+      font-size: 13px;
       text-transform: uppercase;
+      letter-spacing: 0.06em;
       color: #bdbdbd;
-      margin-bottom: 6px;
     }
 
-    .project-bar select,
-    .project-bar input {
-      padding: 8px 12px;
+    .project-bar input[type="text"] {
+      flex: 1;
+      min-width: 160px;
+      padding: 8px 10px;
       border-radius: 8px;
       border: 1px solid #3c3c3c;
-      background: #181818;
+      background: #1f1f1f;
       color: #f5f5f5;
       font-size: 14px;
       outline: none;
     }
 
     .project-bar button {
-      padding: 9px 16px;
-      border-radius: 999px;
+      padding: 8px 14px;
+      border-radius: 8px;
       border: none;
-      background: #3b82f6;
-      color: #fdfdfd;
-      font-size: 14px;
-      font-weight: 600;
       cursor: pointer;
-      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 600;
+      background: #3b82f6;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .project-bar button:hover {
-      background: #2563eb;
+    .project-bar button.secondary {
+      background: #404040;
     }
 
-    .project-note {
-      width: 100%;
-      font-size: 11px;
+    .status-text {
+      font-size: 12px;
       color: #a5a5a5;
       margin-top: 4px;
     }
 
+    /* Accordion – Notion stílus */
     .accordion {
       border-radius: 16px;
       background: #2B2B2B;
@@ -143,7 +138,7 @@
 
     .accordion.open .accordion-body {
       padding: 14px 22px 20px 22px;
-      max-height: 600px;
+      max-height: 900px;
     }
 
     .accordion-body label {
@@ -174,6 +169,7 @@
       min-height: 60px;
     }
 
+    /* Checkbox – Notion style */
     .checkbox-group {
       display: flex;
       flex-wrap: wrap;
@@ -214,31 +210,32 @@
       color: #a5a5a5;
       margin-bottom: 4px;
     }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 20px;
+      }
+      .accordion-header {
+        padding: 14px 16px;
+      }
+      .accordion.open .accordion-body {
+        padding: 12px 16px 16px 16px;
+      }
+    }
   </style>
 </head>
-
 <body>
   <div class="wrapper">
     <h2>Client contact – BrandZone</h2>
     <p class="tagline">Click the grey boxes to reveal the fields to fill out.</p>
 
-    <!-- PROJECT SELECT + CODE + SAVE -->
+    <!-- PROJECT BAR -->
     <div class="project-bar">
-      <div class="project-row">
-        <label for="project-select">Saved projects</label>
-        <select id="project-select">
-          <option value="">– Select saved project –</option>
-        </select>
-      </div>
-      <div class="project-row">
-        <label for="project-code-input">Project code</label>
-        <input id="project-code-input" type="text" placeholder="Pl. MiniHome_2025_Q1">
-      </div>
-      <button id="save-project-btn">Save project</button>
-      <p class="project-note">
-        A projektek és az adatok <strong>csak ezen az eszközön / böngészőben</strong> tárolódnak (localStorage).  
-        Új code + Save = új projekt, a lenyílóból választva betölti az ahhoz tartozó adatokat.
-      </p>
+      <label for="projectCode">Project code</label>
+      <input id="projectCode" type="text" placeholder="Pl. MINIHOME_2025_Q1" />
+      <button id="loadProjectBtn" class="secondary">Load</button>
+      <button id="saveProjectBtn">Save</button>
+      <div class="status-text" id="statusText"></div>
     </div>
 
     <!-- CONTACT PERSON -->
@@ -248,10 +245,10 @@
       </button>
       <div class="accordion-body">
         <label>Name</label>
-        <input type="text" placeholder="Contact person name">
+        <input type="text" placeholder="Contact person name" data-field="contact_person_name">
 
         <label>Form of address</label>
-        <input type="text" placeholder="casual / polite">
+        <input type="text" placeholder="casual / polite" data-field="form_of_address">
       </div>
     </div>
 
@@ -262,10 +259,10 @@
       </button>
       <div class="accordion-body">
         <label>Phone number</label>
-        <input type="text" placeholder="+40 ...">
+        <input type="text" placeholder="+40 ..." data-field="phone_number">
 
         <label>E-mail</label>
-        <input type="email" placeholder="name@company.com">
+        <input type="email" placeholder="name@company.com" data-field="email">
       </div>
     </div>
 
@@ -276,19 +273,19 @@
       </button>
       <div class="accordion-body">
         <label>Website</label>
-        <input type="url" placeholder="https://...">
+        <input type="url" placeholder="https://..." data-field="website">
 
         <label>TikTok</label>
-        <input type="url" placeholder="https://www.tiktok.com/@...">
+        <input type="url" placeholder="https://www.tiktok.com/@..." data-field="tiktok">
 
         <label>Facebook</label>
-        <input type="url" placeholder="Facebook page link">
+        <input type="url" placeholder="Facebook page link" data-field="facebook">
 
         <label>Instagram</label>
-        <input type="url" placeholder="@brand">
+        <input type="url" placeholder="@brand" data-field="instagram">
 
         <label>YouTube</label>
-        <input type="url" placeholder="Channel link">
+        <input type="url" placeholder="Channel link" data-field="youtube">
       </div>
     </div>
 
@@ -299,7 +296,7 @@
       </button>
       <div class="accordion-body">
         <label>Problems / pain points</label>
-        <textarea placeholder="- Short-form videos, strategy.."></textarea>
+        <textarea placeholder="- Short-form videos, strategy…" data-field="needs_help"></textarea>
       </div>
     </div>
 
@@ -311,8 +308,8 @@
       <div class="accordion-body">
         <label>Primary communication</label>
         <div class="checkbox-group">
-          <label><input type="checkbox">Email</label>
-          <label><input type="checkbox">WhatsApp</label>
+          <label><input type="checkbox" data-field="primary_email">Email</label>
+          <label><input type="checkbox" data-field="primary_whatsapp">WhatsApp</label>
         </div>
       </div>
     </div>
@@ -326,9 +323,9 @@
         <label>Potential collab</label>
         <p class="small-note">How much potential do you see in the collaboration?</p>
         <div class="checkbox-group">
-          <label><input type="checkbox">High</label>
-          <label><input type="checkbox">Medium</label>
-          <label><input type="checkbox">Low</label>
+          <label><input type="checkbox" data-field="potential_high">High</label>
+          <label><input type="checkbox" data-field="potential_medium">Medium</label>
+          <label><input type="checkbox" data-field="potential_low">Low</label>
         </div>
       </div>
     </div>
@@ -340,11 +337,11 @@
       </button>
       <div class="accordion-body">
         <label>Notes</label>
-        <textarea placeholder="Any extra info, meeting notes, vibe, important details..."></textarea>
+        <textarea placeholder="Any extra info, meeting notes, vibe, important details..." data-field="notes"></textarea>
       </div>
     </div>
 
-    <!-- INDUSTRY -->
+    <!-- OVERVIEW: INDUSTRY -->
     <div class="accordion">
       <button class="accordion-header">
         💡 Industry (Services, Products, Prices) <span class="icon">›</span>
@@ -353,11 +350,11 @@
         <label>Industry</label>
         <textarea placeholder="- Services
 - Products
-- Price range"></textarea>
+- Price range" data-field="industry"></textarea>
       </div>
     </div>
 
-    <!-- EMPLOYEES -->
+    <!-- OVERVIEW: EMPLOYEES -->
     <div class="accordion">
       <button class="accordion-header">
         💡 Employees <span class="icon">›</span>
@@ -365,176 +362,171 @@
       <div class="accordion-body">
         <label>Employees</label>
         <textarea placeholder="- Number of employees
-- Key roles / departments"></textarea>
+- Key roles / departments" data-field="employees"></textarea>
       </div>
     </div>
 
-    <!-- INTEREST -->
+    <!-- OVERVIEW: WHAT ARE THEY INTERESTED IN -->
     <div class="accordion">
       <button class="accordion-header">
         💡 What are they interested in <span class="icon">›</span>
       </button>
       <div class="accordion-body">
         <label>What are they interested in</label>
-        <p class="small-note">What does the lead want to achieve?</p>
-        <textarea placeholder="Brand awareness, TikTok growth, more leads etc."></textarea>
+        <p class="small-note">Write down the simple need of the lead – mit szeretnének elérni a social / videókkal.</p>
+        <textarea placeholder="Pl.: more online leads, brand building, employer branding, TikTok presence, etc." data-field="interest"></textarea>
       </div>
     </div>
 
   </div>
 
+  <!-- Supabase JS -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script>
-    // Accordion: egyszerre egy legyen nyitva
-    document.querySelectorAll('.accordion-header').forEach(header => {
-      header.addEventListener('click', () => {
+    // --- Supabase config ---
+    const supabaseUrl = "https://hxtfxjectgauodnzxuqy.supabase.co";
+    const supabaseKey = "sb_publishable_Tmc24ujjcIIm3RJ2PKXysA_EI6qPXau";
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+    const statusEl = document.getElementById("statusText");
+    const projectInput = document.getElementById("projectCode");
+    const loadBtn = document.getElementById("loadProjectBtn");
+    const saveBtn = document.getElementById("saveProjectBtn");
+
+    const fieldElements = Array.from(
+      document.querySelectorAll("[data-field]")
+    );
+
+    // Accordion toggle
+    document.querySelectorAll(".accordion-header").forEach(header => {
+      header.addEventListener("click", () => {
         const accordion = header.parentElement;
-        const isOpen = accordion.classList.contains('open');
-        document.querySelectorAll('.accordion').forEach(acc => acc.classList.remove('open'));
-        if (!isOpen) accordion.classList.add('open');
+        const isOpen = accordion.classList.contains("open");
+
+        document.querySelectorAll(".accordion").forEach(acc => acc.classList.remove("open"));
+        if (!isOpen) accordion.classList.add("open");
       });
     });
 
-    // PROJEKT VÁLASZTÓ + MENTÉS (localStorage)
-    (function () {
-      const select = document.getElementById('project-select');
-      const codeInput = document.getElementById('project-code-input');
-      const saveBtn = document.getElementById('save-project-btn');
+    function setStatus(msg, isError = false) {
+      statusEl.textContent = msg;
+      statusEl.style.color = isError ? "#f97373" : "#a5a5a5";
+    }
 
-      const fields = Array.from(
-        document.querySelectorAll('.accordion-body input, .accordion-body textarea, .accordion-body input[type="checkbox"]')
-      );
-
-      const LIST_KEY = 'bz_project_list_v1';
-      const PREFIX = 'bz_project_v1_';
-
-      let currentCode = '';
-
-      function loadProjectList() {
-        const raw = localStorage.getItem(LIST_KEY);
-        if (!raw) return [];
-        try {
-          const list = JSON.parse(raw);
-          return Array.isArray(list) ? list : [];
-        } catch (e) {
-          return [];
-        }
-      }
-
-      function saveProjectList(list) {
-        localStorage.setItem(LIST_KEY, JSON.stringify(list));
-      }
-
-      function keyFor(code, index) {
-        return PREFIX + code + '_' + index;
-      }
-
-      function clearFields() {
-        fields.forEach(f => {
-          if (f.type === 'checkbox') {
-            f.checked = false;
-          } else {
-            f.value = '';
-          }
-        });
-      }
-
-      function loadFieldsFor(code) {
-        fields.forEach((field, index) => {
-          const key = keyFor(code, index);
-          const saved = localStorage.getItem(key);
-          if (saved !== null) {
-            if (field.type === 'checkbox') {
-              field.checked = saved === 'true';
-            } else {
-              field.value = saved;
-            }
-          } else {
-            if (field.type === 'checkbox') {
-              field.checked = false;
-            } else {
-              field.value = '';
-            }
-          }
-        });
-      }
-
-      function saveFieldsFor(code) {
-        fields.forEach((field, index) => {
-          const key = keyFor(code, index);
-          if (field.type === 'checkbox') {
-            localStorage.setItem(key, field.checked ? 'true' : 'false');
-          } else {
-            localStorage.setItem(key, field.value);
-          }
-        });
-      }
-
-      function refreshSelect() {
-        const list = loadProjectList();
-        while (select.options.length > 1) {
-          select.remove(1);
-        }
-        list.forEach(code => {
-          const opt = document.createElement('option');
-          opt.value = code;
-          opt.textContent = code;
-          select.appendChild(opt);
-        });
-        if (currentCode && list.includes(currentCode)) {
-          select.value = currentCode;
+    function collectFormData() {
+      const data = {};
+      fieldElements.forEach(el => {
+        const key = el.dataset.field;
+        if (!key) return;
+        if (el.type === "checkbox") {
+          data[key] = el.checked ? "1" : "0";
         } else {
-          select.value = '';
+          data[key] = el.value || "";
         }
+      });
+      return data;
+    }
+
+    function fillForm(data) {
+      fieldElements.forEach(el => {
+        const key = el.dataset.field;
+        if (!key) return;
+        const value = data[key];
+        if (value === undefined) return;
+
+        if (el.type === "checkbox") {
+          el.checked = value === "1";
+        } else {
+          el.value = value;
+        }
+      });
+    }
+
+    async function loadProject() {
+      const code = projectInput.value.trim();
+      if (!code) {
+        setStatus("Add meg a project code-ot a betöltéshez.", true);
+        return;
       }
 
-      // Save gomb
-      saveBtn.addEventListener('click', () => {
-        const code = codeInput.value.trim();
-        if (!code) {
-          alert('Adj meg egy project code-ot mentés előtt.');
-          return;
-        }
-        currentCode = code;
+      setStatus("Loading project…");
 
-        const list = loadProjectList();
-        if (!list.includes(code)) {
-          list.push(code);
-          saveProjectList(list);
-        }
+      const { data, error } = await supabaseClient
+        .from("projects")
+        .select("field_name, field_value")
+        .eq("client_code", code);
 
-        saveFieldsFor(code);
-        refreshSelect();
+      if (error) {
+        console.error(error);
+        setStatus("Hiba történt betöltés közben.", true);
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        setStatus("Nincs adat ehhez a project code-hoz (még). Újként tudod menteni.");
+        // ürítsük a formot
+        fillForm({});
+        return;
+      }
+
+      const obj = {};
+      data.forEach(row => {
+        obj[row.field_name] = row.field_value;
       });
 
-      // Projekt választó
-      select.addEventListener('change', () => {
-        const code = select.value;
-        currentCode = code;
-        codeInput.value = code;
-        clearFields();
-        if (code) {
-          loadFieldsFor(code);
-        }
-      });
+      fillForm(obj);
+      setStatus("Project betöltve: " + code);
+    }
 
-      // Auto-mentés: ha már van currentCode
-      fields.forEach((field, index) => {
-        const handler = () => {
-          if (!currentCode) return;
-          const key = keyFor(currentCode, index);
-          if (field.type === 'checkbox') {
-            localStorage.setItem(key, field.checked ? 'true' : 'false');
-          } else {
-            localStorage.setItem(key, field.value);
-          }
-        };
-        field.addEventListener('input', handler);
-        field.addEventListener('change', handler);
-      });
+    async function saveProject() {
+      const code = projectInput.value.trim();
+      if (!code) {
+        setStatus("Adj egy project code-ot a mentéshez.", true);
+        return;
+      }
 
-      // Init: csak a projektlista töltődik, nem választ automatikusan
-      refreshSelect();
-    })();
+      const formData = collectFormData();
+
+      setStatus("Saving…");
+
+      // Töröljük a régi sorokat ehhez a project_code-hoz
+      const { error: delError } = await supabaseClient
+        .from("projects")
+        .delete()
+        .eq("client_code", code);
+
+      if (delError) {
+        console.error(delError);
+        setStatus("Hiba történt mentés (delete) közben.", true);
+        return;
+      }
+
+      const rows = Object.entries(formData).map(([field_name, field_value]) => ({
+        client_code: code,
+        field_name,
+        field_value
+      }));
+
+      if (rows.length === 0) {
+        setStatus("Nincs mentendő adat.");
+        return;
+      }
+
+      const { error: insError } = await supabaseClient
+        .from("projects")
+        .insert(rows);
+
+      if (insError) {
+        console.error(insError);
+        setStatus("Hiba történt mentés (insert) közben.", true);
+        return;
+      }
+
+      setStatus("Mentve: " + code);
+    }
+
+    loadBtn.addEventListener("click", loadProject);
+    saveBtn.addEventListener("click", saveProject);
   </script>
 </body>
 </html>
