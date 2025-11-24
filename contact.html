@@ -303,7 +303,7 @@
   </div>
 
   <script>
-    /* Accordion működés */
+    /* Accordion: egyszerre egy nyitva */
     document.querySelectorAll('.accordion-header').forEach(header => {
       header.addEventListener('click', () => {
         const accordion = header.parentElement;
@@ -313,33 +313,43 @@
       });
     });
 
-    /* ★ PER-PAGE STORAGE ★ */
+    /* PER-PAGE STORAGE instance paraméterrel */
     (function() {
-      const pageId = btoa(window.location.href);  // Notion page URL-ből egyedi kulcs
+      // URL-ből kiolvassuk az ?instance=... paramétert
+      const params = new URLSearchParams(window.location.search);
+      const instance = params.get('instance') || 'default';
+
+      // Ez lesz az adott Notion-oldal / kliens azonosítója
+      const pageId = 'bz_instance_' + instance;
 
       const fields = document.querySelectorAll(
         '.accordion-body input, .accordion-body textarea, .accordion-body input[type="checkbox"]'
       );
 
       fields.forEach((field, index) => {
-        const key = "bz_contact_" + pageId + "_" + index;
+        const key = pageId + '_' + index;
 
         const saved = localStorage.getItem(key);
         if (saved !== null) {
-          if (field.type === "checkbox") field.checked = saved === "true";
-          else field.value = saved;
+          if (field.type === 'checkbox') {
+            field.checked = saved === 'true';
+          } else {
+            field.value = saved;
+          }
         }
 
         const handler = () => {
-          if (field.type === "checkbox") localStorage.setItem(key, field.checked.toString());
-          else localStorage.setItem(key, field.value);
+          if (field.type === 'checkbox') {
+            localStorage.setItem(key, field.checked.toString());
+          } else {
+            localStorage.setItem(key, field.value);
+          }
         };
 
-        field.addEventListener("input", handler);
-        field.addEventListener("change", handler);
+        field.addEventListener('input', handler);
+        field.addEventListener('change', handler);
       });
     })();
   </script>
-
 </body>
 </html>
