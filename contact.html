@@ -21,7 +21,7 @@
       color: #f5f5f5;
       margin: 0;
       padding: 20px;
-      overflow-y: hidden; /* NINCS belső scroll, a Notion kap magasságot */
+      overflow-y: auto;
     }
 
     .wrapper {
@@ -390,280 +390,277 @@
   </style>
 </head>
 <body>
-  <!-- Ezt a wrappert figyeljük magasságra -->
-  <div id="notion-resize-wrapper">
-    <div class="wrapper">
-      <!-- CONTACT + PROJECT BAR -->
-      <h2>Client contact – BrandZone</h2>
-      <p class="tagline">Click the grey boxes to reveal the fields to fill out.</p>
+  <div class="wrapper">
+    <!-- CONTACT + PROJECT BAR -->
+    <h2>Client contact – BrandZone</h2>
+    <p class="tagline">Click the grey boxes to reveal the fields to fill out.</p>
 
-      <div class="project-bar">
-        <div class="project-bar-top">
-          <label for="projectCode">Project code</label>
-          <input id="projectCode" type="text" placeholder="Pl. MINIHOME_2025_Q1" />
-          <button id="loadProjectBtn" class="secondary">Load</button>
-          <button id="saveProjectBtn">Save</button>
-          <button id="deleteProjectBtn" class="danger">Delete</button>
-        </div>
-        <div class="project-bar-bottom">
-          <label for="projectSelector">Saved projects</label>
-          <select id="projectSelector">
-            <option value="">– Select saved project –</option>
-          </select>
-        </div>
-        <div class="status-text" id="statusText"></div>
+    <div class="project-bar">
+      <div class="project-bar-top">
+        <label for="projectCode">Project code</label>
+        <input id="projectCode" type="text" placeholder="Pl. MINIHOME_2025_Q1" />
+        <button id="loadProjectBtn" class="secondary">Load</button>
+        <button id="saveProjectBtn">Save</button>
+        <button id="deleteProjectBtn" class="danger">Delete</button>
       </div>
-
-      <!-- CONTACT PERSON -->
-      <div class="accordion">
-        <button class="accordion-header">
-          🧑 Contact person <span class="icon">›</span>
-        </button>
-        <div class="accordion-body">
-          <label>Name</label>
-          <input type="text" placeholder="Contact person name" data-field="contact_person_name">
-
-          <label>Form of address</label>
-          <input type="text" placeholder="casual / polite" data-field="form_of_address">
-        </div>
+      <div class="project-bar-bottom">
+        <label for="projectSelector">Saved projects</label>
+        <select id="projectSelector">
+          <option value="">– Select saved project –</option>
+        </select>
       </div>
+      <div class="status-text" id="statusText"></div>
+    </div>
 
-      <!-- CONTACT DETAILS -->
-      <div class="accordion">
-        <button class="accordion-header">
-          📞 Contact details <span class="icon">›</span>
-        </button>
-        <div class="accordion-body">
-          <label>Phone number</label>
-          <input type="text" placeholder="+40 ..." data-field="phone_number">
+    <!-- CONTACT PERSON -->
+    <div class="accordion">
+      <button class="accordion-header">
+        🧑 Contact person <span class="icon">›</span>
+      </button>
+      <div class="accordion-body">
+        <label>Name</label>
+        <input type="text" placeholder="Contact person name" data-field="contact_person_name">
 
-          <label>E-mail</label>
-          <input type="email" placeholder="name@company.com" data-field="email">
-        </div>
+        <label>Form of address</label>
+        <input type="text" placeholder="casual / polite" data-field="form_of_address">
       </div>
+    </div>
 
-      <!-- WEBSITE & SOCIALS -->
-      <div class="accordion">
-        <button class="accordion-header">
-          🌐 Website & Socials <span class="icon">›</span>
-        </button>
-        <div class="accordion-body">
-          <label>Website</label>
-          <input type="url" placeholder="https://..." data-field="website">
+    <!-- CONTACT DETAILS -->
+    <div class="accordion">
+      <button class="accordion-header">
+        📞 Contact details <span class="icon">›</span>
+      </button>
+      <div class="accordion-body">
+        <label>Phone number</label>
+        <input type="text" placeholder="+40 ..." data-field="phone_number">
 
-          <label>TikTok</label>
-          <input type="url" placeholder="https://www.tiktok.com/@..." data-field="tiktok">
-
-          <label>Facebook</label>
-          <input type="url" placeholder="Facebook page link" data-field="facebook">
-
-          <label>Instagram</label>
-          <input type="url" placeholder="@brand" data-field="instagram">
-
-          <label>YouTube</label>
-          <input type="url" placeholder="Channel link" data-field="youtube">
-        </div>
+        <label>E-mail</label>
+        <input type="email" placeholder="name@company.com" data-field="email">
       </div>
+    </div>
 
-      <!-- NEEDS HELP WITH -->
-      <div class="accordion">
-        <button class="accordion-header">
-          🎯 Needs help with <span class="icon">›</span>
-        </button>
-        <div class="accordion-body">
-          <label>Problems / pain points</label>
-          <textarea placeholder="- Short-form videos, strategy…" data-field="needs_help"></textarea>
-        </div>
+    <!-- WEBSITE & SOCIALS -->
+    <div class="accordion">
+      <button class="accordion-header">
+        🌐 Website & Socials <span class="icon">›</span>
+      </button>
+      <div class="accordion-body">
+        <label>Website</label>
+        <input type="url" placeholder="https://..." data-field="website">
+
+        <label>TikTok</label>
+        <input type="url" placeholder="https://www.tiktok.com/@..." data-field="tiktok">
+
+        <label>Facebook</label>
+        <input type="url" placeholder="Facebook page link" data-field="facebook">
+
+        <label>Instagram</label>
+        <input type="url" placeholder="@brand" data-field="instagram">
+
+        <label>YouTube</label>
+        <input type="url" placeholder="Channel link" data-field="youtube">
       </div>
+    </div>
 
-      <!-- PRIMARY COMMUNICATION -->
-      <div class="accordion">
-        <button class="accordion-header">
-          📬 Primary communication <span class="icon">›</span>
-        </button>
-        <div class="accordion-body">
-          <label>Primary communication</label>
-          <div class="checkbox-group">
-            <label><input type="checkbox" data-field="primary_email">Email</label>
-            <label><input type="checkbox" data-field="primary_whatsapp">WhatsApp</label>
-          </div>
+    <!-- NEEDS HELP WITH -->
+    <div class="accordion">
+      <button class="accordion-header">
+        🎯 Needs help with <span class="icon">›</span>
+      </button>
+      <div class="accordion-body">
+        <label>Problems / pain points</label>
+        <textarea placeholder="- Short-form videos, strategy…" data-field="needs_help"></textarea>
+      </div>
+    </div>
+
+    <!-- PRIMARY COMMUNICATION -->
+    <div class="accordion">
+      <button class="accordion-header">
+        📬 Primary communication <span class="icon">›</span>
+      </button>
+      <div class="accordion-body">
+        <label>Primary communication</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" data-field="primary_email">Email</label>
+          <label><input type="checkbox" data-field="primary_whatsapp">WhatsApp</label>
         </div>
       </div>
+    </div>
 
-      <!-- POTENTIAL COLLAB -->
-      <div class="accordion">
-        <button class="accordion-header">
-          📊 Potential collab <span class="icon">›</span>
-        </button>
-        <div class="accordion-body">
-          <label>Potential collab</label>
-          <p class="small-note">How much potential do you see in the collaboration?</p>
-          <div class="checkbox-group">
-            <label><input type="checkbox" data-field="potential_high">High</label>
-            <label><input type="checkbox" data-field="potential_medium">Medium</label>
-            <label><input type="checkbox" data-field="potential_low">Low</label>
-          </div>
+    <!-- POTENTIAL COLLAB -->
+    <div class="accordion">
+      <button class="accordion-header">
+        📊 Potential collab <span class="icon">›</span>
+      </button>
+      <div class="accordion-body">
+        <label>Potential collab</label>
+        <p class="small-note">How much potential do you see in the collaboration?</p>
+        <div class="checkbox-group">
+          <label><input type="checkbox" data-field="potential_high">High</label>
+          <label><input type="checkbox" data-field="potential_medium">Medium</label>
+          <label><input type="checkbox" data-field="potential_low">Low</label>
         </div>
       </div>
+    </div>
 
-      <!-- NOTES -->
-      <div class="accordion">
-        <button class="accordion-header">
-          📝 Notes <span class="icon">›</span>
-        </button>
-        <div class="accordion-body">
-          <label>Notes</label>
-          <textarea placeholder="Any extra info, meeting notes, vibe, important details..." data-field="notes"></textarea>
-        </div>
+    <!-- NOTES -->
+    <div class="accordion">
+      <button class="accordion-header">
+        📝 Notes <span class="icon">›</span>
+      </button>
+      <div class="accordion-body">
+        <label>Notes</label>
+        <textarea placeholder="Any extra info, meeting notes, vibe, important details..." data-field="notes"></textarea>
       </div>
+    </div>
 
-      <!-- OVERVIEW: INDUSTRY -->
-      <div class="accordion">
-        <button class="accordion-header">
-          💡 Industry (Services, Products, Prices) <span class="icon">›</span>
-        </button>
-        <div class="accordion-body">
-          <label>Industry</label>
-          <textarea placeholder="- Services
+    <!-- OVERVIEW: INDUSTRY -->
+    <div class="accordion">
+      <button class="accordion-header">
+        💡 Industry (Services, Products, Prices) <span class="icon">›</span>
+      </button>
+      <div class="accordion-body">
+        <label>Industry</label>
+        <textarea placeholder="- Services
 - Products
 - Price range" data-field="industry"></textarea>
-        </div>
       </div>
+    </div>
 
-      <!-- OVERVIEW: EMPLOYEES -->
-      <div class="accordion">
-        <button class="accordion-header">
-          💡 Employees <span class="icon">›</span>
-        </button>
-        <div class="accordion-body">
-          <label>Employees</label>
-          <textarea placeholder="- Number of employees
+    <!-- OVERVIEW: EMPLOYEES -->
+    <div class="accordion">
+      <button class="accordion-header">
+        💡 Employees <span class="icon">›</span>
+      </button>
+      <div class="accordion-body">
+        <label>Employees</label>
+        <textarea placeholder="- Number of employees
 - Key roles / departments" data-field="employees"></textarea>
-        </div>
       </div>
+    </div>
 
-      <!-- OVERVIEW: WHAT ARE THEY INTERESTED IN -->
-      <div class="accordion">
-        <button class="accordion-header">
-          💡 What are they interested in <span class="icon">›</span>
+    <!-- OVERVIEW: WHAT ARE THEY INTERESTED IN -->
+    <div class="accordion">
+      <button class="accordion-header">
+        💡 What are they interested in <span class="icon">›</span>
+      </button>
+      <div class="accordion-body">
+        <label>What are they interested in</label>
+        <p class="small-note">Write down the simple need of the lead – mit szeretnének elérni a social / videókkal.</p>
+        <textarea placeholder="Pl.: more online leads, brand building, employer branding, TikTok presence, etc." data-field="interest"></textarea>
+      </div>
+    </div>
+
+    <!-- PROJECT INFOS GRID -->
+    <h2>Project infos</h2>
+
+    <div class="grid-container">
+      <div class="card">
+        <button class="card-header">
+          <div class="title-group">
+            <span class="icon">ℹ️</span> Basic client information
+          </div>
+          <span class="arrow">▼</span>
         </button>
-        <div class="accordion-body">
-          <label>What are they interested in</label>
-          <p class="small-note">Write down the simple need of the lead – mit szeretnének elérni a social / videókkal.</p>
-          <textarea placeholder="Pl.: more online leads, brand building, employer branding, TikTok presence, etc." data-field="interest"></textarea>
+        <div class="card-body">
+          <label>Short summary of what the company does / Key products</label>
+          <textarea placeholder="Summary..." data-field="summary_company"></textarea>
+
+          <label>Target Audience / Buyer Persona</label>
+          <textarea placeholder="Who is the target audience?" data-field="target_audience"></textarea>
         </div>
       </div>
 
-      <!-- PROJECT INFOS GRID -->
-      <h2>Project infos</h2>
-
-      <div class="grid-container">
-        <div class="card">
-          <button class="card-header">
-            <div class="title-group">
-              <span class="icon">ℹ️</span> Basic client information
-            </div>
-            <span class="arrow">▼</span>
-          </button>
-          <div class="card-body">
-            <label>Short summary of what the company does / Key products</label>
-            <textarea placeholder="Summary..." data-field="summary_company"></textarea>
-
-            <label>Target Audience / Buyer Persona</label>
-            <textarea placeholder="Who is the target audience?" data-field="target_audience"></textarea>
+      <div class="card">
+        <button class="card-header">
+          <div class="title-group">
+            <span class="icon">📈</span> Business overview
           </div>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="card-body">
+          <label>Existing online presence (socials, website, activity)</label>
+          <textarea placeholder="List current channels..." data-field="existing_online_presence"></textarea>
+
+          <label>Competitors mentioned or visible online</label>
+          <textarea placeholder="List competitors..." data-field="competitors"></textarea>
         </div>
+      </div>
 
-        <div class="card">
-          <button class="card-header">
-            <div class="title-group">
-              <span class="icon">📈</span> Business overview
-            </div>
-            <span class="arrow">▼</span>
-          </button>
-          <div class="card-body">
-            <label>Existing online presence (socials, website, activity)</label>
-            <textarea placeholder="List current channels..." data-field="existing_online_presence"></textarea>
-
-            <label>Competitors mentioned or visible online</label>
-            <textarea placeholder="List competitors..." data-field="competitors"></textarea>
+      <div class="card">
+        <button class="card-header">
+          <div class="title-group">
+            <span class="icon">📊</span> Pain points & challenges
           </div>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="card-body">
+          <label>Bullet points note about all of their problems</label>
+          <textarea placeholder="- Problem 1&#10;- Problem 2" data-field="pain_points"></textarea>
+
+          <label>Challenges of social media presence / Motivation</label>
+          <textarea placeholder="Why do they need help now?" data-field="challenges_motivation"></textarea>
         </div>
+      </div>
 
-        <div class="card">
-          <button class="card-header">
-            <div class="title-group">
-              <span class="icon">📊</span> Pain points & challenges
-            </div>
-            <span class="arrow">▼</span>
-          </button>
-          <div class="card-body">
-            <label>Bullet points note about all of their problems</label>
-            <textarea placeholder="- Problem 1&#10;- Problem 2" data-field="pain_points"></textarea>
-
-            <label>Challenges of social media presence / Motivation</label>
-            <textarea placeholder="Why do they need help now?" data-field="challenges_motivation"></textarea>
+      <div class="card">
+        <button class="card-header">
+          <div class="title-group">
+            <span class="icon">📝</span> Customer needs & content
           </div>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="card-body">
+          <label>What kind of content the client wants / Story to tell</label>
+          <textarea placeholder="Short form, photos, image film..." data-field="content_type"></textarea>
+
+          <label>Tone and style they prefer</label>
+          <input type="text" placeholder="Fun, professional, emotional..." data-field="tone_style">
+
+          <label>Frequency / campaign or ongoing idea</label>
+          <input type="text" placeholder="e.g. 2 videos / week" data-field="frequency">
+
+          <label>Actor providing</label>
+          <input type="text" placeholder="Client provides or Agency?" data-field="actor_providing">
+
+          <label>Social media channels</label>
+          <input type="text" placeholder="TikTok, IG, YT..." data-field="social_channels">
         </div>
+      </div>
 
-        <div class="card">
-          <button class="card-header">
-            <div class="title-group">
-              <span class="icon">📝</span> Customer needs & content
-            </div>
-            <span class="arrow">▼</span>
-          </button>
-          <div class="card-body">
-            <label>What kind of content the client wants / Story to tell</label>
-            <textarea placeholder="Short form, photos, image film..." data-field="content_type"></textarea>
-
-            <label>Tone and style they prefer</label>
-            <input type="text" placeholder="Fun, professional, emotional..." data-field="tone_style">
-
-            <label>Frequency / campaign or ongoing idea</label>
-            <input type="text" placeholder="e.g. 2 videos / week" data-field="frequency">
-
-            <label>Actor providing</label>
-            <input type="text" placeholder="Client provides or Agency?" data-field="actor_providing">
-
-            <label>Social media channels</label>
-            <input type="text" placeholder="TikTok, IG, YT..." data-field="social_channels">
+      <div class="card">
+        <button class="card-header">
+          <div class="title-group">
+            <span class="icon">🏁</span> The goals
           </div>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="card-body">
+          <label>What is the most important result?</label>
+          <textarea placeholder="Most important KPI..." data-field="main_result"></textarea>
+
+          <label>Industry or local market?</label>
+          <input type="text" placeholder="Local / Global" data-field="industry_or_market">
+
+          <label>Long term or campaign?</label>
+          <input type="text" placeholder="Long term / One-off" data-field="long_term_or_campaign">
+
+          <label>What would success look like for them?</label>
+          <textarea placeholder="Definition of success..." data-field="success_definition"></textarea>
         </div>
+      </div>
 
-        <div class="card">
-          <button class="card-header">
-            <div class="title-group">
-              <span class="icon">🏁</span> The goals
-            </div>
-            <span class="arrow">▼</span>
-          </button>
-          <div class="card-body">
-            <label>What is the most important result?</label>
-            <textarea placeholder="Most important KPI..." data-field="main_result"></textarea>
-
-            <label>Industry or local market?</label>
-            <input type="text" placeholder="Local / Global" data-field="industry_or_market">
-
-            <label>Long term or campaign?</label>
-            <input type="text" placeholder="Long term / One-off" data-field="long_term_or_campaign">
-
-            <label>What would success look like for them?</label>
-            <textarea placeholder="Definition of success..." data-field="success_definition"></textarea>
+      <div class="card">
+        <button class="card-header">
+          <div class="title-group">
+            <span class="icon">💻</span> Previous experience
           </div>
-        </div>
-
-        <div class="card">
-          <button class="card-header">
-            <div class="title-group">
-              <span class="icon">💻</span> Previous experience
-            </div>
-            <span class="arrow">▼</span>
-          </button>
-          <div class="card-body">
-            <label>Short note of what they liked/disliked about partnerships</label>
-            <textarea placeholder="Previous agency experiences..." data-field="previous_experience"></textarea>
-          </div>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="card-body">
+          <label>Short note of what they liked/disliked about partnerships</label>
+          <textarea placeholder="Previous agency experiences..." data-field="previous_experience"></textarea>
         </div>
       </div>
     </div>
@@ -710,7 +707,6 @@
     function setStatus(msg, isError = false) {
       statusEl.textContent = msg;
       statusEl.style.color = isError ? "#f97373" : "#a5a5a5";
-      sendHeightToNotion();
     }
 
     function collectFormData() {
@@ -744,7 +740,6 @@
           el.value = value;
         }
       });
-      sendHeightToNotion();
     }
 
     function clearForm() {
@@ -887,8 +882,6 @@
       } else {
         projectSelector.value = "";
       }
-
-      sendHeightToNotion();
     }
 
     projectSelector.addEventListener("change", () => {
@@ -902,37 +895,7 @@
     saveBtn.addEventListener("click", saveProject);
     deleteBtn.addEventListener("click", deleteProject);
 
-    // --- AUTO RESIZE NOTION EMBED ---
-    function sendHeightToNotion() {
-      const wrapper = document.getElementById('notion-resize-wrapper');
-      if (!wrapper) return;
-
-      const height = wrapper.scrollHeight;
-
-      window.parent?.postMessage(
-        {
-          type: "embed:height",
-          height: height + 50 // kis extra margó
-        },
-        "*"
-      );
-    }
-
-    window.addEventListener("load", sendHeightToNotion);
-    window.addEventListener("resize", sendHeightToNotion);
-
-    const resizeWrapper = document.getElementById('notion-resize-wrapper');
-    if (resizeWrapper && 'MutationObserver' in window) {
-      new MutationObserver(() => {
-        sendHeightToNotion();
-      }).observe(resizeWrapper, {
-        childList: true,
-        subtree: true,
-        attributes: true
-      });
-    }
-
-    // oldal betöltéskor saved project lista
+    // oldal betöltéskor frissítjük a saved project listát
     refreshProjectList();
   </script>
 </body>
